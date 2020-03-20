@@ -65,7 +65,6 @@ import org.elasticsearch.transport.TransportService;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -116,16 +115,13 @@ public class TransportShardUpsertActionTest extends CrateDummyClusterServiceUnit
         }
 
         @Override
-        protected IndexItemResponse insert(ShardUpsertRequest request,
-                                           ShardUpsertRequest.Item item,
+        protected IndexItemResponse insert(ShardUpsertRequest.Item item,
                                            IndexShard indexShard,
                                            boolean isRetry,
-                                           @Nullable ReturnValueGen returnGen,
-                                           @Nullable InsertSourceGen insertSourceGen) throws Exception {
-            throw new VersionConflictEngineException(
-                indexShard.shardId(),
-                item.id(),
-                "document with id: " + item.id() + " already exists in '" + request.shardId().getIndexName() + '\'');
+                                           Context context) throws Exception {
+            throw new VersionConflictEngineException(indexShard.shardId(),
+                                                     item.id(),
+                                                     "document with id: " + item.id() + " already exist");
         }
     }
 
@@ -213,7 +209,7 @@ public class TransportShardUpsertActionTest extends CrateDummyClusterServiceUnit
         ShardResponse response = result.finalResponseIfSuccessful;
         assertThat(response.failures().size(), is(1));
         assertThat(response.failures().get(0).message(),
-            is("[1]: version conflict, document with id: 1 already exists in 'characters'"));
+            is("[1]: version conflict, document with id: 1 already exist"));
     }
 
     @Test
