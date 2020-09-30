@@ -1,3 +1,6 @@
+.. meta::
+    :last-reviewed: 2020-09-18
+
 ======================================
 Backporting changes from Elasticsearch
 ======================================
@@ -50,10 +53,10 @@ applied to a certain point.
 
 Below lists the changesets that we applied. This should be updated whenever a
 backport is made. If a patch is skipped because it is not applicable, it
-should be crossed out as well. 
+should be crossed out as well.
 
 - ``x`` to mark applied patches
-- ``s`` for skipped patches if they are not applicable (for example, if the 
+- ``s`` for skipped patches if they are not applicable (for example, if the
   functionality is not present in CrateDB)
 - ``d`` marks a delayed patch - a non-trivial change we should apply that
   does not affect too any components, so delaying it doesn't make applying

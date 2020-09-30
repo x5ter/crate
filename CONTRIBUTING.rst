@@ -1,3 +1,6 @@
+.. meta::
+    :last-reviewed: 2020-09-18
+
 ============
 Contributing
 ============
@@ -7,8 +10,8 @@ Thank you for your interest in contributing.
 This document is a guideline. Don't worry about getting everything perfect.
 We are happy to work with you on your contribution.
 
-`Upvoting existing issues`_, `reporting new issues`_, or `giving feedback`_ 
-about your experience are the easiest ways to contribute. 
+`Upvoting existing issues`_, `reporting new issues`_, or `giving feedback`_
+about your experience are the easiest ways to contribute.
 
 We also accept pull requests for changes to the code and to the documentation.
 For more information on how to do this, read our `developer guide`_.

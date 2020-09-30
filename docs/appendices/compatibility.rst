@@ -1,10 +1,13 @@
+.. meta::
+    :last-reviewed: 2020-09-30
+
 .. _crate_standard_sql:
 
 =================
 SQL compatibility
 =================
 
-CrateDB aims to provide a `SQL implementation`_ that is familiar to anyone who 
+CrateDB aims to provide a `SQL implementation`_ that is familiar to anyone who
 has used databases that provide a standards-compliant SQL language. However,
 you should be aware of some unique characteristics in CrateDB's SQL dialect.
 
@@ -142,7 +145,7 @@ These **functions** of `standard SQL`_ are either not supported or only partly s
 exposed in the :ref:`information_schema` table (see :ref:`sql_features` for
 usage).
 
-CrateDB also supports the `PostgreSQL wire protocol`_. 
+CrateDB also supports the `PostgreSQL wire protocol`_.
 
 If you have use cases for any missing features, functions, or dialect
 improvements, let us know on `Github`_! We are always improving and extending

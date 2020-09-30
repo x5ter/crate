@@ -1,3 +1,6 @@
+.. meta::
+    :last-reviewed: 2020-09-18
+
 ===========
 Basic setup
 ===========
@@ -8,7 +11,7 @@ Prerequisites
 CrateDB is written in Java_ and includes a pre-configured bundled version of
 OpenJDK_ in its build. But to develop CrateDB, you still have to install Java_
 in order to run the Gradle_ build tool. Some of the tools that are used
-to build documentation and run tests require Python_. 
+to build documentation and run tests require Python_.
 
 To set up a minimal development environment, you will need:
 
@@ -25,7 +28,7 @@ Manual Build
 
 This project uses Gradle_ as a build tool. The most convenient way to build
 and run CrateDB while you are working on the code is to do so directly from
-within your IDE. See the section on `IDE integration`_. 
+within your IDE. See the section on `IDE integration`_.
 
 However, you can also use Gradle directly. Gradle can be invoked by executing
 ``./gradlew``. The first time this command is executed, it is bootstrapped
@@ -89,7 +92,7 @@ All the tasks related to packaging and releasing (``distTar``, ``release``) or
 tasks that depend on them (``itest``) will ignore the ``-DuseSystemJdk``
 parameter. This means that the compilation and test execution can be
 done with the system JDK, but releasing and packaging will still use the
-bundled JDK. 
+bundled JDK.
 
 The ``-DuseSystemJdk`` is useful for doing releases and cross-platform builds.
 For example, you can build a CrateDB package for Windows with the
@@ -156,7 +159,7 @@ Checkstyle compliance from within the IDE.
 
 The Checkstyle plugin enforces rules defined in `<PROJECT_ROOT>/gradle/checkstyle/rules.xml`.
 It checks for things such as unused imports, inconsistent formatting, and potential
-bugs. 
+bugs.
 
 The plugin is run by Gradle after compiling the main sources. Only main sources
 are analyzed and not the test sources.

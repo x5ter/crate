@@ -1,3 +1,6 @@
+.. meta::
+    :last-reviewed: 2020-09-18
+
 ======================
 Git & Release workflow
 ======================
@@ -41,7 +44,7 @@ For example::
 
 During this feature freeze, we can no longer merge new features into master.
 We focus on fixes, performance improvements, or other cleanups. At some point,
-we will lift the feature freeze. 
+we will lift the feature freeze.
 
 At this point, a ``major.minor`` release branch is created and we bump the
 ``minor`` version on master.
