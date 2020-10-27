@@ -40,9 +40,12 @@ import io.crate.execution.engine.NodeOperationTreeGenerator;
 import io.crate.execution.engine.pipeline.TopN;
 import io.crate.execution.support.OneRowActionListener;
 import io.crate.expression.eval.EvaluatingNormalizer;
+import io.crate.expression.symbol.DynamicReference;
+import io.crate.expression.symbol.Function;
 import io.crate.expression.symbol.InputColumn;
 import io.crate.expression.symbol.Literal;
 import io.crate.expression.symbol.Symbol;
+import io.crate.expression.symbol.SymbolVisitor;
 import io.crate.metadata.IndexParts;
 import io.crate.metadata.Reference;
 import io.crate.metadata.Routing;
@@ -78,6 +81,8 @@ import static java.util.Objects.requireNonNull;
 
 public final class DeletePlanner {
 
+    private static final NonPartitionReferenceDetector NON_PARTITION_BY_DETECTOR = new NonPartitionReferenceDetector();
+
     public static Plan planDelete(AnalyzedDeleteStatement delete,
                                   SubqueryPlanner subqueryPlanner,
                                   PlannerContext context) {
@@ -93,7 +98,12 @@ public final class DeletePlanner {
             normalizer, delete.query(), table, context.transactionContext(), context.nodeContext());
 
         if (!detailedQuery.partitions().isEmpty()) {
-            return new DeletePartitions(table.ident(), detailedQuery.partitions());
+            // deleting whole partitions is only valid if the query only contains filters based on partition-by cols
+            var hasNonPartitionReferences = detailedQuery.query()
+                .accept(NON_PARTITION_BY_DETECTOR, table.partitionedByColumns());
+            if (hasNonPartitionReferences == false) {
+                return new DeletePartitions(table.ident(), detailedQuery.partitions());
+            }
         }
         if (detailedQuery.docKeys().isPresent()) {
             return new DeleteById(tableRel.tableInfo(), detailedQuery.docKeys().get());
@@ -193,4 +203,32 @@ public final class DeletePlanner {
         Collect collect = new Collect(collectPhase, TopN.NO_LIMIT, 0, 1, 1, null);
         return Merge.ensureOnHandler(collect, context, Collections.singletonList(MergeCountProjection.INSTANCE));
     }
+
+    private static class NonPartitionReferenceDetector extends SymbolVisitor<List<Reference>, Boolean> {
+        @Override
+        public Boolean visitFunction(Function symbol, List<Reference> partitionedByColumns) {
+            for (var arg : symbol.arguments()) {
+                if (arg.accept(this, partitionedByColumns)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Boolean visitReference(Reference symbol, List<Reference> partitionedByColumns) {
+            return !partitionedByColumns.contains(symbol);
+        }
+
+        @Override
+        public Boolean visitDynamicReference(DynamicReference symbol,
+                                             List<Reference> context) {
+            return visitReference(symbol, context);
+        }
+
+        @Override
+        protected Boolean visitSymbol(Symbol symbol, List<Reference> partitionedByColumns) {
+            return false;
+        }
+    };
 }
