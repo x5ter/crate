@@ -126,4 +126,26 @@ public class SeqNoBasedOCCIntegrationTest extends SQLTransportIntegrationTest {
                                 HttpResponseStatus.BAD_REQUEST,
                                 4000));
     }
+
+    @Test
+    public void test_update_where_id_and_seq_missing_primary_term() throws Exception {
+        execute("create table t (x integer primary key, y string)");
+        ensureYellow();
+        assertThrows(() -> execute("update t set y = 1 where x = 1 and _seq_no = 1"),
+                     isSQLError(containsString(VersioninigValidationException.SEQ_NO_AND_PRIMARY_TERM_USAGE_MSG),
+                                PGErrorStatus.INTERNAL_ERROR,
+                                HttpResponseStatus.BAD_REQUEST,
+                                4000));
+    }
+
+    @Test
+    public void test_delete_where_id_and_seq_missing_primary_term() throws Exception {
+        execute("create table t (x integer primary key, y string)");
+        ensureYellow();
+        assertThrows(() -> execute("delete from t where x = 1 and _seq_no = 1"),
+                     isSQLError(containsString(VersioninigValidationException.SEQ_NO_AND_PRIMARY_TERM_USAGE_MSG),
+                                PGErrorStatus.INTERNAL_ERROR,
+                                HttpResponseStatus.BAD_REQUEST,
+                                4000));
+    }
 }

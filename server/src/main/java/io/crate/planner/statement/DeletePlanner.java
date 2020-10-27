@@ -230,5 +230,5 @@ public final class DeletePlanner {
         protected Boolean visitSymbol(Symbol symbol, List<Reference> partitionedByColumns) {
             return false;
         }
-    };
+    }
 }
